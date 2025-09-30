@@ -3,6 +3,7 @@ import { LessonCategories } from "@/components/LessonCategories";
 import { InteractivePiano } from "@/components/InteractivePiano";
 import { TheoryConcepts } from "@/components/TheoryConcepts";
 import { ProgressTracker } from "@/components/ProgressTracker";
+import { ExerciseSection } from "@/components/ExerciseSection";
 
 const Index = () => {
   return (
@@ -10,6 +11,7 @@ const Index = () => {
       <Hero />
       <LessonCategories />
       <InteractivePiano />
+      <ExerciseSection />
       <TheoryConcepts />
       <ProgressTracker />
     </div>
