@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, PlayCircle } from "lucide-react";
+import { RefreshCw, PlayCircle, Download } from "lucide-react";
+import { toast } from "sonner";
 
 const rhythmPatterns = [
   { pattern: "♩ ♩ ♩ ♩", description: "Four quarter notes", difficulty: "Easy" },
@@ -27,6 +28,23 @@ export const RhythmExercise = () => {
     const randomTime = timeSignatures[Math.floor(Math.random() * timeSignatures.length)];
     setCurrentExercise(randomIndex);
     setTimeSignature(randomTime);
+  };
+
+  const downloadExercise = () => {
+    const exercise = rhythmPatterns[currentExercise];
+    const content = `Rhythm Exercise\n\nTime Signature: ${timeSignature}\nDifficulty: ${exercise.difficulty}\n\nPattern: ${exercise.pattern}\n\nDescription: ${exercise.description}\n\nPractice: Clap or tap along with the rhythm!`;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rhythm-exercise-${exercise.difficulty.toLowerCase()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast.success("Exercise downloaded!");
   };
 
   const exercise = rhythmPatterns[currentExercise];
@@ -70,6 +88,14 @@ export const RhythmExercise = () => {
           >
             <RefreshCw className="w-4 h-4" />
             New Pattern
+          </Button>
+          <Button 
+            onClick={downloadExercise}
+            className="flex-1 gap-2"
+            variant="secondary"
+          >
+            <Download className="w-4 h-4" />
+            Download
           </Button>
           <Button className="flex-1 gap-2">
             <PlayCircle className="w-4 h-4" />

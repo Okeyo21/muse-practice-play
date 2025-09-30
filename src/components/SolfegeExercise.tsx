@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, PlayCircle, Volume2 } from "lucide-react";
+import { RefreshCw, PlayCircle, Volume2, Download } from "lucide-react";
+import { toast } from "sonner";
 
 const solfegePatterns = [
   { notes: ["Do", "Re", "Mi"], pattern: "C - D - E", description: "Ascending major steps", difficulty: "Easy" },
@@ -27,6 +28,23 @@ export const SolfegeExercise = () => {
     const randomKey = keys[Math.floor(Math.random() * keys.length)];
     setCurrentExercise(randomIndex);
     setCurrentKey(randomKey);
+  };
+
+  const downloadExercise = () => {
+    const exercise = solfegePatterns[currentExercise];
+    const content = `Solfege Exercise\n\nKey: ${currentKey}\nDifficulty: ${exercise.difficulty}\n\nSolfege Notes: ${exercise.notes.join(" → ")}\nPattern: ${exercise.pattern}\n\nDescription: ${exercise.description}\n\nPractice: Sing each note clearly and focus on accurate pitch!`;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `solfege-exercise-${exercise.difficulty.toLowerCase()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast.success("Exercise downloaded!");
   };
 
   const exercise = solfegePatterns[currentExercise];
@@ -82,6 +100,14 @@ export const SolfegeExercise = () => {
           >
             <RefreshCw className="w-4 h-4" />
             New Pattern
+          </Button>
+          <Button 
+            onClick={downloadExercise}
+            className="flex-1 gap-2"
+            variant="secondary"
+          >
+            <Download className="w-4 h-4" />
+            Download
           </Button>
           <Button className="flex-1 gap-2">
             <Volume2 className="w-4 h-4" />
